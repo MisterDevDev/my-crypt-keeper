@@ -5,7 +5,7 @@ module.exports = router
 
 router.get('/oauth', async (req, res, next) => {
     try {
-        res.send(coinbase_client)
+        res.send(coinbase_public)
     } catch (error) {
         next(error)
     }
