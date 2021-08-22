@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 //https://dev.to/vinodchauhan7/react-hooks-with-async-await-1n9g
 //helpful async useEffect article 
 
-const Auth = () => {
+const Auth = (props) => {
     const [publicKey, setPublicKey] = useState(() => [])
 
     async function fetchPublicKey() {
@@ -27,7 +27,7 @@ const Auth = () => {
     const coinbaseOauth = 
     `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}`
 
-    console.log('Heroku... what is the pub key???', publicKey)
+    console.log('props???', props)
 
     return(
         <div>
