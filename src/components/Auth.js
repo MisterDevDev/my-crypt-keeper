@@ -27,6 +27,8 @@ const Auth = () => {
     const coinbaseOauth = 
     `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}`
 
+    console.log('Heroku... what is the pub key???', publicKey)
+
     return(
         <div>
             <a href={`${coinbaseOauth}`}>Try me!!</a>
