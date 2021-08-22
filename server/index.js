@@ -5,6 +5,7 @@ const { db, seed } = require('./db')
 const app = express();
 module.exports = app
 
+
 const PORT = process.env.PORT || 8080;
 const PUBLIC_PATH = path.join(__dirname, '../public');
 const DIST_PATH = path.join(__dirname, '../dist');
@@ -13,6 +14,11 @@ app.use(morgan('dev'))
 app.use(express.json());
 app.use(express.static(PUBLIC_PATH));
 app.use(express.static(DIST_PATH));
+
+app.use('/auth', require('./auth'))
+//app.use('/api', require('./api'))
+
+app.get('/', (req, res)=> res.sendFile(path.join(__dirname, '..', 'public/index.html')));
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
