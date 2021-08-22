@@ -3,6 +3,8 @@ const pkg = require('../../package.json')
 
 const databaseName = pkg.name
 
+
+
 const config = {
   logging: false
 };
@@ -15,13 +17,13 @@ if(process.env.LOGGING === 'true'){
 if(process.env.DATABASE_URL){
     config.dialectOptions = {
       ssl: {
-        rejectUnauthorized: true
+        rejectUnauthorized: false
       }
     };
   }
 
 const db = new Sequelize(
-    process.env.DATABASE_URL || `postgres://localhost:5432/${databaseName}`
+    process.env.DATABASE_URL || `postgres://localhost:5432/${databaseName}`, config
 )
 
 module.exports = db
