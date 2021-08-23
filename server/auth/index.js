@@ -39,7 +39,7 @@ router.get('/list/:id', async (req, res, next) => {
     try {
         const {data} = await curly.get('https://api.coinbase.com/v2/accounts',{
             postFields: querystring.stringify({
-                Authorization: `Bearer ${req.params.id}`
+                Authorization: req.params.id
             })
         });
         console.log('my data!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', req.params.id)
