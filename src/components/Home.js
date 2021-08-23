@@ -6,8 +6,13 @@ const Home = () => {
     const cookie = document.cookie
     const [access, refresh] = cookie.slice(cookie.indexOf('=') + 1).split('&')
 
-    const listAccounts = async(access, refresh) => {
-        const data = await axios.post(`/auth/list`, {access, refresh})
+    // const listAccounts = async(access, refresh) => {
+    //     const data = await axios.post(`/auth/list`, {access, refresh})
+    //     console.log('i got the data!!!', data)
+    // }
+
+    const listAccounts = async(access) => {
+        const data = await axios.get(`/auth/list/${access}`, {access, refresh})
         console.log('i got the data!!!', data)
     }
 

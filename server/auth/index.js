@@ -3,6 +3,8 @@ const coinbase_public = process.env.coinbase_public || (require('./env')).coinba
 const coinbase_secret = process.env.coinbase_secret || require('./env').coinbase_secret
 const axios = require('axios')
 const Client = require('coinbase').Client;
+const { curly } = require('node-libcurl');
+const querystring = require('querystring');
 module.exports = router
 
 router.get('/oauth', async (req, res, next) => {
@@ -21,13 +23,27 @@ router.get('/access', async (req, res, next) => {
     }
 })
 
-router.post('/list', async (req, res, next) => {
+// router.post('/list', async (req, res, next) => {
+//     try {
+//         const client = new Client({'accessToken': req.body.access,
+//                          'refreshToken': req.body.refresh});
+//         client.getAccounts({}, function(err, accounts) {
+//             res.status(err).send(accounts);
+//           });
+//     } catch (error) {
+//         next(error)
+//     }
+// })
+
+router.get('/list/:id', async (req, res, next) => {
     try {
-        const client = new Client({'accessToken': req.body.access,
-                         'refreshToken': req.body.refresh});
-        client.getAccounts({}, function(err, accounts) {
-            res.status(err).send(accounts);
-          });
+        const {data} = await curly.get('https://api.coinbase.com/v2/accounts',{
+            postFields: querystring.stringify({
+                Bearer: req.params.id
+            })
+        });
+        console.log('my data!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', req.params.id)
+        res.send(data)
     } catch (error) {
         next(error)
     }
