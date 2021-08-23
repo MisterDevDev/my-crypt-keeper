@@ -4,6 +4,7 @@ const coinbase_secret = process.env.coinbase_secret || require('./env').coinbase
 const axios = require('axios')
 const Client = require('coinbase').Client;
 const { curly } = require('node-libcurl');
+const curl = new Curl()
 const querystring = require('querystring');
 module.exports = router
 
@@ -37,12 +38,24 @@ router.get('/access', async (req, res, next) => {
 
 router.get('/list/:id', async (req, res, next) => {
     try {
-        const {data} = await curly.get('https://api.coinbase.com/v2/accounts',{
-            postFields: querystring.stringify({
-                httpHeader : `Authorization: Bearer ${req.params.id}`
-            })
-        });
-        console.log('my data!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', req.params.id)
+        curl.setOpt('URL', 'https://api.coinbase.com/v2/accounts');
+        curl.setOpt('FOLLOWLOCATION', true);
+        curl.setOpt(Curl.option.HTTPHEADER,
+            [`Authorization: Bearer ${req.params.id}`])
+        
+        curl.on('end', function (statusCode, data, headers) {
+            console.info(statusCode);
+            console.info('---');
+            console.info(data.length);
+            console.info('---');
+            console.info(this.getInfo( 'TOTAL_TIME'));
+            console.log('my data!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', data)
+            this.close();
+            });
+
+        curl.on('error', curl.close.bind(curl));
+        curl.perform();
+
         res.send(data)
     } catch (error) {
         next(error)
@@ -60,6 +73,27 @@ router.post('/currencies', async (req, res, next) => {
         next(error)
     }
 })
+/*
+const { Curl } = require('node-libcurl');
+
+const curl = new Curl();
+
+curl.setOpt('URL', 'www.google.com');
+curl.setOpt('FOLLOWLOCATION', true);
+
+curl.on('end', function (statusCode, data, headers) {
+  console.info(statusCode);
+  console.info('---');
+  console.info(data.length);
+  console.info('---');
+  console.info(this.getInfo( 'TOTAL_TIME'));
+  
+  this.close();
+});
+
+curl.on('error', curl.close.bind(curl));
+curl.perform();
+*/
 
 /*
 'grant_type=authorization_code
