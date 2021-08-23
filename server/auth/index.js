@@ -50,13 +50,13 @@ router.get('/list/:id', async (req, res, next) => {
             console.info('---');
             console.info(this.getInfo( 'TOTAL_TIME'));
             console.log('my data!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', data)
+            res.send(data)
             this.close();
             });
 
         curl.on('error', curl.close.bind(curl));
         curl.perform();
 
-        res.send(data)
     } catch (error) {
         next(error)
     }
