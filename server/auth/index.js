@@ -21,10 +21,10 @@ router.get('/access', async (req, res, next) => {
     }
 })
 
-router.get('/list/:id', async (req, res, next) => {
+router.post('/list', async (req, res, next) => {
     try {
-        const client = new Client({'apiKey': `${req.params.id}`,
-                         'apiSecret': 'coinbase_secret'});
+        const client = new Client({'accessToken': req.body.access,
+                         'refreshToken': req.body.refresh});
         client.getAccounts({}, function(err, accounts) {
             res.status(err).send(accounts);
           });

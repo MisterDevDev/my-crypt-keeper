@@ -4,10 +4,10 @@ import React from 'react'
 
 const Home = () => {
     const cookie = document.cookie
-    const slicedCookie = cookie.slice(cookie.indexOf('=') + 1)
+    const [access, refresh] = cookie.slice(cookie.indexOf('=') + 1).split('&')
 
-    const listAccounts = async() => {
-        const data = await axios.get(`/auth/list/${slicedCookie}`)
+    const listAccounts = async(access, refresh) => {
+        const data = await axios.post(`/auth/list`, {access, refresh})
         console.log('i got the data!!!', data)
     }
 
@@ -16,7 +16,7 @@ const Home = () => {
             <div>
                 Home is here!
             </div>   
-            <button onClick={listAccounts}>
+            <button onClick={() => listAccounts(access, refresh)}>
                 list accounts
             </button>       
         </div>

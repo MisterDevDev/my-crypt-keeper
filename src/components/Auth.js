@@ -36,7 +36,7 @@ const Auth = (props) => {
         try {
             if(_key){
                 const {data} = await axios.post(access_url, accessPost)
-                makeCookie(data.access_token)
+                makeCookie(data.access_token, data.refresh_token)
                 console.log('coinbase response data', data)
                 props.history.push('/home')
             } else console.log('no token available')
@@ -45,13 +45,13 @@ const Auth = (props) => {
         }
     }
 
-    const makeCookie = (data) => { 
+    const makeCookie = (access, refresh) => { 
         const now = new Date();
         let time = now.getTime();
         let withHours = time + 2 * 60 * 60 * 1000
         now.setTime(withHours);
         let expireTime = `expires=${now.toUTCString()}`;
-        document.cookie = `cookie=${data};${expireTime}`
+        document.cookie = `cookie=${access}&${refresh};${expireTime}`
       }
 
 
@@ -65,7 +65,7 @@ const Auth = (props) => {
     const coinbase_url = 'https://www.coinbase.com/oauth/authorize?'
     const response = 'response_type=code'
     const clientId = `&client_id=${publicKey}`
-    const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/' //'&redirect_uri=http://localhost:8080/' 
+    const redirect_uri = '&redirect_uri=http://localhost:8080/' //'&redirect_uri=https://fast-brook-16275.herokuapp.com/'
     const secure_code = '&state=4t5e6s7t8'
     const scope = '&scope=wallet:accounts:read'
 
