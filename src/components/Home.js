@@ -11,6 +11,11 @@ const Home = () => {
         console.log('i got the data!!!', data)
     }
 
+    const listCurrencies = async(access, refresh) => {
+        const data = await axios.post(`/auth/currencies`, {access, refresh})
+        console.log('i got the data!!!', data)
+    }
+
     return (
         <div>
             <div>
@@ -19,6 +24,9 @@ const Home = () => {
             <button onClick={() => listAccounts(access, refresh)}>
                 list accounts
             </button>       
+            <button onClick={() => listCurrencies(access, refresh)}>
+                list currencies
+            </button>   
         </div>
     )
 }

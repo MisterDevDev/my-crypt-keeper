@@ -33,6 +33,18 @@ router.post('/list', async (req, res, next) => {
     }
 })
 
+router.post('/currencies', async (req, res, next) => {
+    try {
+        const client = new Client({'accessToken': req.body.access,
+                         'refreshToken': req.body.refresh});
+        client.getCurrencies(function(err, currencies) {
+            res.status(err).send(currencies);
+          });
+    } catch (error) {
+        next(error)
+    }
+})
+
 /*
 'grant_type=authorization_code
 &code=4c666b5c0c0d9d3140f2e0776cbe245f3143011d82b7a2c2a590cc7e20b79ae8
