@@ -2,7 +2,6 @@ const router = require('express').Router()
 const coinbase_public = process.env.coinbase_public || (require('./env')).coinbase_public
 const coinbase_secret = process.env.coinbase_secret || require('./env').coinbase_secret
 const axios = require('axios')
-const Client = require('coinbase').Client;
 const { Curl } = require('node-libcurl');
 const curl = new Curl()
 const querystring = require('querystring');
@@ -44,12 +43,6 @@ router.get('/list/:id', async (req, res, next) => {
             [`Authorization: Bearer ${req.params.id}`])
         
         curl.on('end', function (statusCode, data, headers) {
-            console.info(statusCode);
-            console.info('---');
-            console.info(data.length);
-            console.info('---');
-            console.info(this.getInfo( 'TOTAL_TIME'));
-            console.log('my data!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', data)
             res.send(data)
             this.close();
             });
