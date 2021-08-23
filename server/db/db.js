@@ -17,7 +17,7 @@ if(process.env.LOGGING === 'true'){
 if(process.env.DATABASE_URL){
     config.dialectOptions = {
       ssl: {
-        rejectUnauthorized: true
+        rejectUnauthorized: false
       }
     };
   }

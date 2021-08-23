@@ -34,7 +34,7 @@ app.use((err, req, res, next) => {
 
 const init = async () => {
   try {
-      //await seed();
+      await seed();
     app.listen(PORT, () => console.log(`Listening on port: ${PORT}`))
   } catch (ex) {
     console.log(ex)
