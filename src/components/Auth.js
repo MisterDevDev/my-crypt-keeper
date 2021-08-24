@@ -82,7 +82,41 @@ const Auth = (props) => {
     `${type}${code}${clientId}${secret}${redirect_uri}`
 
     return(
-        <div>
+        <div class="card">
+  <div class="card-content">
+    <p class="title has-text-centered">
+        {_key ? 
+            'Authentication Successful!'
+            : 
+            'Welcome! Please Begin By Authenticating through Coinbase.'
+        }
+    </p>
+  </div>
+  <footer class="card-footer">
+    <p class="card-footer-item">
+        {_key ? 
+        <button class="button is-primary" onClick={storeAccess}>
+            Enter the crypt!
+        </button>
+        :
+        <a href={`${coinbaseOauth}`}>
+            <button class="button is-primary">
+                Login
+            </button>
+        </a>
+ 
+        }
+        
+    </p>
+  </footer>
+</div>
+    )
+}
+
+export default Auth
+
+/*
+    <div>
             {_key ? 
             <div>
                 <div>
@@ -93,8 +127,4 @@ const Auth = (props) => {
             :
             <a href={`${coinbaseOauth}`}>Try me!!</a>}
         </div>
-    )
-}
-
-export default Auth
-
+*/
