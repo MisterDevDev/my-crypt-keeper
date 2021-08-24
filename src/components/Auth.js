@@ -1,6 +1,6 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 
 //https://dev.to/vinodchauhan7/react-hooks-with-async-await-1n9g
@@ -16,7 +16,7 @@ const Auth = (props) => {
 
     async function fetchPublicKey() {
         try {
-            const {data} = await axios.get('/auth/oauth')
+            const { data } = await axios.get('/auth/oauth')
             setPublicKey(data)
         } catch (error) {
             console.log('Fetch Public Key Failed')
@@ -25,17 +25,17 @@ const Auth = (props) => {
 
     async function fetchSecretKey() {
         try {
-            const {data} = await axios.get('/auth/access')
+            const { data } = await axios.get('/auth/access')
             setSecretKey(data)
         } catch (error) {
             console.log('Fetch Secret Key Failed')
         }
     }
 
-    const storeAccess = async() => {
+    const storeAccess = async () => {
         try {
-            if(_key){
-                const {data} = await axios.post(access_url, accessPost)
+            if (_key) {
+                const { data } = await axios.post(access_url, accessPost)
                 makeCookie(data.access_token, data.refresh_token)
                 console.log('coinbase response data', data)
                 props.history.push('/home')
@@ -45,20 +45,20 @@ const Auth = (props) => {
         }
     }
 
-    const makeCookie = (access, refresh) => { 
+    const makeCookie = (access, refresh) => {
         const now = new Date();
         let time = now.getTime();
         let withHours = time + 2 * 60 * 60 * 1000
         now.setTime(withHours);
         let expireTime = `expires=${now.toUTCString()}`;
         document.cookie = `cookie=${access}&${refresh};${expireTime}`
-      }
+    }
 
 
 
     let _key = props.location.search
 
-    if(_key){
+    if (_key) {
         _key = _key.slice(_key.indexOf('=') + 1, _key.indexOf('&'))
     }
 
@@ -69,8 +69,8 @@ const Auth = (props) => {
     const secure_code = '&state=4t5e6s7t8'
     const scope = '&scope=wallet:accounts:read'
 
-    const coinbaseOauth = 
-    `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}`
+    const coinbaseOauth =
+        `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}`
 
     //After accessToken aquired
     const access_url = 'https://api.coinbase.com/oauth/token'
@@ -78,53 +78,48 @@ const Auth = (props) => {
     const code = `&code=${_key}`
     const secret = `&client_secret=${secretKey}`
 
-    const accessPost = 
-    `${type}${code}${clientId}${secret}${redirect_uri}`
+    const accessPost =
+        `${type}${code}${clientId}${secret}${redirect_uri}`
 
-    return(
-        <div class="card">
-  <div class="card-content">
-    <p class="title has-text-centered">
-        {_key ? 
-            'Authentication Successful!'
-            : 
-            'Welcome! Please Begin By Authenticating through Coinbase.'
-        }
-    </p>
-  </div>
-  <footer class="card-footer">
-    <p class="card-footer-item">
-        {_key ? 
-        <button class="button is-primary" onClick={storeAccess}>
-            Enter the crypt!
-        </button>
-        :
-        <a href={`${coinbaseOauth}`}>
-            <button class="button is-primary">
-                Login
-            </button>
-        </a>
- 
-        }
-        
-    </p>
-  </footer>
-</div>
+    return (
+        <div className='authPage'>
+        <section class="section">
+        <div className='authCard' class="card mt-6">
+            <div class="card-content">
+                
+                    {_key ?
+                    <p class="title has-text-centered">
+                        'Authentication Successful!'
+                    </p>
+                        :
+                    <p class="title has-text-centered">
+                        Welcome to Crypt Keeper<br/>
+                        Please Begin By Authenticating through Coinbase
+                    </p>
+                    }
+                
+            </div>
+            <footer class="card-footer">
+                <p class="card-footer-item">
+                    {_key ?
+                        <button class="button is-success" onClick={storeAccess}>
+                            Enter the crypt!
+                        </button>
+                        :
+                        <a href={`${coinbaseOauth}`}>
+                            <button class="button is-light">
+                                Login
+                            </button>
+                        </a>
+
+                    }
+                </p>
+            </footer>
+        </div>
+        </section>
+        </div>
     )
 }
 
 export default Auth
 
-/*
-    <div>
-            {_key ? 
-            <div>
-                <div>
-                    Access granted! Proceed to the crypt!
-                </div>
-                <button onClick={storeAccess}>Enter Crypt</button>
-             </div>
-            :
-            <a href={`${coinbaseOauth}`}>Try me!!</a>}
-        </div>
-*/

@@ -3,10 +3,11 @@ import React from 'react'
 
 const Navbar = () => {
     return(
-<nav class="navbar is-spaced" role="navigation" aria-label="main navigation">
+    <div className='navContainer'>
+<nav class="navbar is-warning has-shadow is-spaced" role="navigation" aria-label="main navigation">
   <div class="navbar-brand">
     <a class="navbar-item" href="https://bulma.io">
-      <img class='image is-64x64' src="https://mckeeper.s3.us-east-2.amazonaws.com/mckeeper_logo.png" />
+      <img class='' src="https://mckeeper.s3.us-east-2.amazonaws.com/mckeeper_logo.png" alt='site logo' style={{maxHeight: '70px'}}/>
     </a>
 
     <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
@@ -63,6 +64,7 @@ const Navbar = () => {
     </div>
   </div>
 </nav>
+</div>
 
     )
 }

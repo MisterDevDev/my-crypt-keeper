@@ -1,0 +1,21 @@
+body {
+    background-color: lavenderblush;
+    height: 100vh
+}
+
+.authPage{
+    background-color: darkslategray;
+    height: 100vh
+}
+
+.card {
+    background-color: lightcoral;
+}
+
+.navContainer {
+    border-bottom: 4px groove lightgray;
+}
+
+.blushDiv {
+    background-color: lavenderblush;
+}
