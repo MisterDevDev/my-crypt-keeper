@@ -1,4 +1,5 @@
 import React from 'react';
+import Hub from './Hub'
 import Routes from './Routes'
 import Home from './components/Home'
 import Navbar from './components/Navbar';
@@ -6,7 +7,8 @@ import Navbar from './components/Navbar';
 const App = () => {
   return (
     <div>
-      <Routes/>
+      <Hub />
+      <Routes />
     </div>
   );
 };

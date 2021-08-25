@@ -2,7 +2,9 @@ const router = require('express').Router()
 const coinbase_public = process.env.coinbase_public || (require('./env')).coinbase_public
 const coinbase_secret = process.env.coinbase_secret || require('./env').coinbase_secret
 const axios = require('axios')
+const { models: {User }} = require('../db')
 module.exports = router
+
 
 router.get('/oauth', async (req, res, next) => {
     try {
@@ -59,6 +61,39 @@ router.get('/user/:id', async (req, res, next) => {
         next(error)
     }
 })
+
+router.post('/login', async (req, res, next) => {
+    try {
+        console.log('Got the request! Heres body~~~~~~~~~~~~~~~~~~~~~~~~~', req.body)
+      res.send({ token: await User.authenticate(req.body)}); 
+    } catch (err) {
+      next(err)
+    }
+  })
+  
+  
+  router.post('/signup', async (req, res, next) => {
+    try {
+      const user = await User.create(req.body)
+      res.send({token: await user.generateToken()})
+    } catch (err) {
+      if (err.name === 'SequelizeUniqueConstraintError') {
+        res.status(401).send('User already exists')
+      } else {
+        next(err)
+      }
+    }
+  })
+  
+  router.get('/me', async (req, res, next) => {
+    try {
+        console.log('you got to meeeeeeeeeee')
+      res.send(await User.findByToken(req.headers.authorization))
+    } catch (ex) {
+      next(ex)
+    }
+  })
+
 /*
 const { Curl } = require('node-libcurl');
 

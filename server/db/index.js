@@ -2,7 +2,7 @@
 
 const db = require('./db')
 
-const User = require('./models/User')
+const User = require('./User')
 
 async function seed() {
     await db.sync({ force: true }) // clears db and matches models to tables
@@ -11,7 +11,6 @@ async function seed() {
 
 module.exports = {
   db,
-  seed,
   models: {
     User,
   },

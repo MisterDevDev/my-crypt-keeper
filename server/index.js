@@ -1,8 +1,9 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan')
-const { db, seed } = require('./db')
+const { db } = require('./db')
 const app = express();
+const seed = require('../script/seed');
 module.exports = app
 
 

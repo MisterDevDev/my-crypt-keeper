@@ -1,5 +1,6 @@
 import React from 'react'
 import Auth from './components/Auth'
+import {LogIn} from './components/SignIn'
 import Home from './components/Home'
 import {withRouter, Route, Switch, Redirect} from 'react-router-dom'
 
@@ -8,7 +9,7 @@ const Routes = () => {
     return(
         <div>
         <Switch>
-            <Route path='/' exact component={ Auth } />
+            <Route path='/' exact component={ LogIn } />
             <Route path='/auth' exact component={ Auth } />
             <Route path='/home' exact component={ Home }/>
             <Route path='*' component={ Home }/>
