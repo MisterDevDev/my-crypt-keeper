@@ -1,5 +1,5 @@
 body {
-    background-color: lavenderblush;
+    background-color: lavender;
     height: 100vh
 }
 
@@ -13,9 +13,9 @@ body {
 }
 
 .navContainer {
-    border-bottom: 4px groove lightgray;
+    border-bottom: 7px groove lightgray;
 }
 
 .blushDiv {
-    background-color: lavenderblush;
+    background-color: lavender;
 }

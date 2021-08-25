@@ -3,7 +3,6 @@ import React from 'react'
 const Landing = () => {
     return (
         <div>
-            <h3 class="title is-3">Snippets ¯\_(ツ)_/¯</h3>
             <div class="box">
                 <h4 id="const" class="title is-3">const</h4>
                 <article class="message is-primary">

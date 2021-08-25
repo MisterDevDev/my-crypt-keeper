@@ -2,9 +2,6 @@ const router = require('express').Router()
 const coinbase_public = process.env.coinbase_public || (require('./env')).coinbase_public
 const coinbase_secret = process.env.coinbase_secret || require('./env').coinbase_secret
 const axios = require('axios')
-const { Curl } = require('node-libcurl');
-const curl = new Curl()
-const querystring = require('querystring');
 module.exports = router
 
 router.get('/oauth', async (req, res, next) => {
@@ -23,33 +20,15 @@ router.get('/access', async (req, res, next) => {
     }
 })
 
-// router.post('/list', async (req, res, next) => {
-//     try {
-//         const client = new Client({'accessToken': req.body.access,
-//                          'refreshToken': req.body.refresh});
-//         client.getAccounts({}, function(err, accounts) {
-//             res.status(err).send(accounts);
-//           });
-//     } catch (error) {
-//         next(error)
-//     }
-// })
-
 router.get('/list/:id', async (req, res, next) => {
     try {
-        curl.setOpt('URL', 'https://api.coinbase.com/v2/accounts');
-        curl.setOpt('FOLLOWLOCATION', true);
-        curl.setOpt(Curl.option.HTTPHEADER,
-            [`Authorization: Bearer ${req.params.id}`])
-        
-        curl.on('end', function (statusCode, data, headers) {
-            res.send(data)
-            this.close();
-            });
-
-        curl.on('error', curl.close.bind(curl));
-        curl.perform();
-
+        const token = req.params.id
+        const {data} = await axios.get('https://api.coinbase.com/v2/accounts',{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        res.send(data)
     } catch (error) {
         next(error)
     }
@@ -62,6 +41,20 @@ router.post('/currencies', async (req, res, next) => {
         client.getCurrencies(function(err, currencies) {
             res.status(err).send(currencies);
           });
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/user/:id', async (req, res, next) => {
+    try {
+        const token = req.params.id
+        const {data} = await axios.get('https://api.coinbase.com/v2/user',{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        res.send(data)
     } catch (error) {
         next(error)
     }

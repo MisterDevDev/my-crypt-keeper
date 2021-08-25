@@ -65,7 +65,7 @@ const Auth = (props) => {
     const coinbase_url = 'https://www.coinbase.com/oauth/authorize?'
     const response = 'response_type=code'
     const clientId = `&client_id=${publicKey}`
-    const redirect_uri = '&redirect_uri=http://localhost:8080/' //'&redirect_uri=https://fast-brook-16275.herokuapp.com/' //
+    const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/' //'&redirect_uri=http://localhost:8080/' //
     const secure_code = '&state=4t5e6s7t8'
     const scope = '&scope=wallet:accounts:read'
 
