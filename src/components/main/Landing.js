@@ -1,45 +1,61 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const Landing = () => {
+const Landing = (props) => {
+    const [coinbaseUser, setCoinbaseUser] = useState(() => [])
+    const [coinbaseAcc, setCoinbaseAcc] = useState(() => [])
+  
+  
+    useEffect(() => fetchCoinbaseUser(), [])
+    useEffect(() => fetchCoinbaseAcc(), [])
+    
+    async function fetchCoinbaseUser() {
+      try {
+        const {data} = await axios.get(`/auth/user/${props.match.params.id}`)
+        setCoinbaseUser(data)
+        console.log('Look at the user!!', data)
+      } catch (error) {
+        console.log(error)
+      }
+    } 
+  
+    async function fetchCoinbaseAcc() {
+      try {
+        const {data} = await axios.get(`/auth/account/${props.match.params.id}`)
+        setCoinbaseAcc(data)
+        console.log('Look at the acc!!', data)
+      } catch (error) {
+        console.log(error)
+      }
+    } 
+
+    console.log('landing user', coinbaseUser)
+    console.log('landing acc', coinbaseAcc)
     return (
         <div>
-            <div class="box">
-                <h4 id="const" class="title is-3">const</h4>
-                <article class="message is-primary">
-                    <span class="icon has-text-primary">
-                        <i class="fab fa-js"></i>
-                    </span>
-                    <div class="message-body">
-                        Block-scoped. Cannot be re-assigned. Not immutable.
+            {coinbaseAcc.data ? 
+                coinbaseAcc.data.filter((wallet) => wallet.balance.amount > 0)
+                .map((wallet) => {
+                    return(
+                    <div class="box">
+                    <h4 id="const" class="title is-3">{wallet.name}</h4>
+                    <article class="message is-light">
+                        <span class="icon has-text-light">
+                            <i class="fab fa-js"></i>
+                        </span>
+                        <div class="message-body">
+                            {`Current Ballance: ${wallet.balance.amount}(${wallet.currency.code})`}
+                        </div>
+                    </article>
+                    <div class="buttons">
+                    <button class="button is-warning">{`Buy ${wallet.currency.code}`}</button>
+                    <button class="button is-warning">{`Send ${wallet.currency.code}`}</button>
                     </div>
-                </article>
-                <pre><code class="language-javascript">const test = 'test';</code></pre>
-            </div>
-            <div class="box">
-                <h4 id="let" class="title is-3">let</h4>
-                <article class="message is-primary">
-                    <span class="icon has-text-primary">
-                        <i class="fas fa-info-circle"></i>
-                    </span>
-                    <div class="message-body">
-                        Block-scoped. Can be re-assigned.
-                    </div>
-                </article>
-                <pre><code class="language-javascript">let i = 0;</code></pre>
-            </div>
-            <h3 class="title is-3">More to Come...</h3>
-            <div class="box">
-                <h4 id="lorem" class="title is-4">More to come...</h4>
-                <article class="message is-primary">
-                    <span class="icon has-text-primary">
-                        <i class="fas fa-info-circle"></i>
-                    </span>
-                    <div class="message-body">
-                        Lorem ipsum dolor sit amet, mea ne viderer veritus menandri, id scaevola gloriatur instructior sit.
-                    </div>
-                </article>
-                <pre><code class="language-javascript">let i = 0;</code></pre>
-            </div>
+                </div>
+                )})
+                :
+                ""
+            }
         </div>
     )
 }

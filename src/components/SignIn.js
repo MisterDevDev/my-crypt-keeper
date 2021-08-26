@@ -14,13 +14,14 @@ const SignIn = (props) => {
 
   const { name, displayName, error, handleLogin } = props;
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async(evt) => {
     evt.preventDefault();
     const formName = evt.target.name;
     const username = evt.target.username.value;
     const password = evt.target.password.value;
+    await axios.put(`/auth/set/${username}`, {key})
+    console.log('~~~~~~~~~~~~~stuff that happened after setToken~~~~~~~~~~~~~')
     handleLogin(formName, username, password, key)
-
   }
 
 
@@ -112,8 +113,8 @@ const mapSignup = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     handleLogin(formName, username, password, _key) {
-      dispatch(authenticate(username, password, formName, _key));
-      history.push('/home')
+      dispatch(authenticate(username, password, formName));
+      history.push(`/home/${username}`)
     },
   };
 };

@@ -62,7 +62,7 @@ const Auth = (props) => {
     const clientId = `&client_id=${publicKey}`
     const redirect_uri = '&redirect_uri=http://localhost:8080/auth' //'&redirect_uri=https://fast-brook-16275.herokuapp.com/' 
     const secure_code = '&state=4t5e6s7t8'
-    const scope = '&scope=wallet:accounts:read'
+    const scope = '&account_currency=BTC,ETH,ADA&account=all&scope=wallet:accounts:read'
 
     const coinbaseOauth =
         `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}`
@@ -80,7 +80,9 @@ const Auth = (props) => {
         <section class="section">
         <div className='authCard' class="card mt-6">
             <div class="card-content">
-                
+                <div>
+                <img className='authImg' src="https://mckeeper.s3.us-east-2.amazonaws.com/mckeeper2.png" />
+                </div>
                     {_key ?
                     <p class="title has-text-centered">
                         'Authentication Successful!'
@@ -91,8 +93,8 @@ const Auth = (props) => {
                         Please Begin By Authenticating through Coinbase
                     </p>
                     }
-                
             </div>
+            <div className='spacerDiv'></div>
             <footer class="card-footer">
                 <p class="card-footer-item">
                     {_key ?
@@ -101,7 +103,7 @@ const Auth = (props) => {
                         </button>
                         :
                         <a href={`${coinbaseOauth}`}>
-                            <button class="button is-light">
+                            <button class="button is-warning is-large">
                                 Login
                             </button>
                         </a>

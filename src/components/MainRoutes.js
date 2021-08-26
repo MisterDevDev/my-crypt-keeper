@@ -10,7 +10,7 @@ const MainRoutes = () => {
         <Switch>
             <Route path='/friends' component={ Friends } />
             <Route path='/currency' component={ Currency } />
-            <Route path='/home' component={ Landing } />
+            <Route path='/home/:id' component={ Landing } />
         </Switch> 
         </div>
         

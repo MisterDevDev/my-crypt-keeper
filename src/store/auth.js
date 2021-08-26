@@ -45,7 +45,7 @@ export const authenticate = (username, password, method, key) => async dispatch 
     const res = await axios.post(`/auth/${method}`, {username, password})
     console.log('~~auth to axios finished!~~', res)
     window.localStorage.setItem(TOKEN, res.data.token)
-    await setToken(username, key)
+    //await setToken(username, key)
     dispatch(me())
     
   } catch (authError) {
@@ -64,7 +64,7 @@ export const logout = () => {
 
 const setToken = async(username, key) => {
   console.log('The store is attempting to add the key.....', username, key)
-  await axios.put(`/auth/set/${username}`, {key})
+  
   return(console.log('token was set!!'))
 }
 

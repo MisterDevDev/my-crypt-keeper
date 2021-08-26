@@ -9,6 +9,9 @@ async function seed() {
     console.log('db synced!')
 }
 
+User.hasMany(User)
+
+
 module.exports = {
   db,
   models: {

@@ -51,7 +51,7 @@ const Navbar = () => {
 
           <div class="navbar-end">
             <div class="navbar-item">
-                <a class="button is-info">Log out</a>
+                <a href='/' class="button is-info">Log out</a>
             </div>
           </div>
         </div>

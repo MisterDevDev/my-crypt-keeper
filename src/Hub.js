@@ -3,13 +3,14 @@ import {connect} from 'react-redux'
 
 const Hub = () => {
     return(
-        <div></div>
+        <div>
+        </div>
     )
 }
 
 const mapState = state => {
     return {
-      
+      state
     }
   }
 

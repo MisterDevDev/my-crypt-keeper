@@ -53,10 +53,28 @@ router.get('/user/:id', async (req, res, next) => {
         
         const userId = req.params.id
         const user = await User.findOne({
-          where: {id: userId}
+          where: {username: userId}
+        }) 
+        const {data} = await axios.get('https://api.coinbase.com/v2/user',{
+            headers: {
+                Authorization: 'Bearer ' + user.apiKey
+            }
+        })
+        res.send(data)
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/account/:id', async (req, res, next) => {
+    try {
+        
+        const userId = req.params.id
+        const user = await User.findOne({
+          where: {username: userId}
         }) 
         console.log('~~~~~~~~~~~~~~~about to make the request!!!', user)
-        const {data} = await axios.get('https://api.coinbase.com/v2/user',{
+        const {data} = await axios.get('https://api.coinbase.com/v2/accounts?limit=100',{
             headers: {
                 Authorization: 'Bearer ' + user.apiKey
             }
@@ -67,6 +85,8 @@ router.get('/user/:id', async (req, res, next) => {
         next(error)
     }
 })
+
+
 
 router.post('/login', async (req, res, next) => {
     try {
@@ -127,42 +147,3 @@ router.put('/set/:id', async (req, res, next) => {
       console.log(error)
     }
   })
-
-/*
-const { Curl } = require('node-libcurl');
-
-const curl = new Curl();
-
-curl.setOpt('URL', 'www.google.com');
-curl.setOpt('FOLLOWLOCATION', true);
-
-curl.on('end', function (statusCode, data, headers) {
-  console.info(statusCode);
-  console.info('---');
-  console.info(data.length);
-  console.info('---');
-  console.info(this.getInfo( 'TOTAL_TIME'));
-  
-  this.close();
-});
-
-curl.on('error', curl.close.bind(curl));
-curl.perform();
-*/
-
-/*
-'grant_type=authorization_code
-&code=4c666b5c0c0d9d3140f2e0776cbe245f3143011d82b7a2c2a590cc7e20b79ae8
-&client_id=1532c63424622b6e9c4654e7f97ed40194a1547e114ca1c682f44283f39dfa49
-&client_secret=3a21f08c585df35c14c0c43b832640b29a3a3a18e5c54d5401f08c87c8be0b20
-&redirect_uri=https://example.com/oauth/callback'
-*/
-
-/*
-access_token: "aee22c7608870ffd5b0b9d26c213cca9a357d24c4d7e672f7a15bc0e531d3534"
-created_at: 1629679835
-expires_in: 7200
-refresh_token: "cbcfec39b519ee6a6dc927c3fa323caccbf457cddfd46630b915a8ed2176e6f2"
-scope: "wallet:accounts:read"
-token_type: "bearer"
-*/

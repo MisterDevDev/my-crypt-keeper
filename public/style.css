@@ -4,12 +4,12 @@ body {
 }
 
 .authPage{
-    background-color: darkslategray;
+    background-color: lavenderblush;
     height: 100vh
 }
 
 .card {
-    background-color: lightcoral;
+    background-color: ivory;
 }
 
 .navContainer {
@@ -18,4 +18,12 @@ body {
 
 .blushDiv {
     background-color: lavender;
+}
+
+.authImg {
+    height: 100px;
+}
+
+.spacerDiv{
+    height:100px
 }
