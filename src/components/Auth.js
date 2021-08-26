@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from "react-redux";
 
 
 //https://dev.to/vinodchauhan7/react-hooks-with-async-await-1n9g
@@ -8,10 +9,8 @@ import { Link } from 'react-router-dom'
 
 const Auth = (props) => {
     const [publicKey, setPublicKey] = useState(() => [])
-    const [secretKey, setSecretKey] = useState(() => [])
 
     useEffect(() => fetchPublicKey(), [])
-    useEffect(() => fetchSecretKey(), [])
 
 
     async function fetchPublicKey() {
@@ -23,36 +22,32 @@ const Auth = (props) => {
         }
     }
 
-    async function fetchSecretKey() {
-        try {
-            const { data } = await axios.get('/auth/access')
-            setSecretKey(data)
-        } catch (error) {
-            console.log('Fetch Secret Key Failed')
-        }
-    }
 
     const storeAccess = async () => {
+        const _user = props.state.auth.id
+        console.log('_user is: ~~', _user)
         try {
             if (_key) {
+                console.log('my _key~~', _key)
+                console.log('my accessPost var~~~', accessPost)
                 const { data } = await axios.post(access_url, accessPost)
-                makeCookie(data.access_token, data.refresh_token)
-                console.log('coinbase response data', data)
+                console.log('data from fetching api key', data)
+                await axios.put(`/auth/set/${_user}`, {key:data.access_token})
                 props.history.push('/home')
             } else console.log('no token available')
         } catch (error) {
-            console.log('Store Accesss Failed')
+            console.log(error)
         }
     }
-
-    const makeCookie = (access, refresh) => {
-        const now = new Date();
-        let time = now.getTime();
-        let withHours = time + 2 * 60 * 60 * 1000
-        now.setTime(withHours);
-        let expireTime = `expires=${now.toUTCString()}`;
-        document.cookie = `cookie=${access}&${refresh};${expireTime}`
-    }
+    console.log('Auths props!!!',props)
+    // const makeCookie = (access, refresh) => {
+    //     const now = new Date();
+    //     let time = now.getTime();
+    //     let withHours = time + 2 * 60 * 60 * 1000
+    //     now.setTime(withHours);
+    //     let expireTime = `expires=${now.toUTCString()}`;
+    //     document.cookie = `cookie=${access}&${refresh};${expireTime}`
+    // }
 
 
 
@@ -65,7 +60,7 @@ const Auth = (props) => {
     const coinbase_url = 'https://www.coinbase.com/oauth/authorize?'
     const response = 'response_type=code'
     const clientId = `&client_id=${publicKey}`
-    const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/' //'&redirect_uri=http://localhost:8080/' //
+    const redirect_uri = '&redirect_uri=http://localhost:8080/auth' //'&redirect_uri=https://fast-brook-16275.herokuapp.com/' 
     const secure_code = '&state=4t5e6s7t8'
     const scope = '&scope=wallet:accounts:read'
 
@@ -76,10 +71,9 @@ const Auth = (props) => {
     const access_url = 'https://api.coinbase.com/oauth/token'
     const type = 'grant_type=authorization_code'
     const code = `&code=${_key}`
-    const secret = `&client_secret=${secretKey}`
 
     const accessPost =
-        `${type}${code}${clientId}${secret}${redirect_uri}`
+        `${type}${code}${clientId}${redirect_uri}`
 
     return (
         <div className='authPage'>
@@ -121,5 +115,11 @@ const Auth = (props) => {
     )
 }
 
-export default Auth
+const mapState = (state) => {
+    return {
+        state
+    };
+  };
+
+  export default connect(mapState)(Auth)
 

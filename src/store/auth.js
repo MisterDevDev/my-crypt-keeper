@@ -1,6 +1,15 @@
 import axios from 'axios'
 import history from '../history'
 
+const makeCookie = (userId) => {
+  const now = new Date();
+  let time = now.getTime();
+  let withHours = time + 2 * 60 * 60 * 1000
+  now.setTime(withHours);
+  let expireTime = `expires=${now.toUTCString()}`;
+  document.cookie = `cookie=${id};${expireTime}`
+}
+
 const TOKEN = 'token'
 
 /**
@@ -30,12 +39,13 @@ export const me = () => async dispatch => {
   }
 }
 
-export const authenticate = (username, password, method) => async dispatch => {
+export const authenticate = (username, password, method, key) => async dispatch => {
   try {
     console.log('~~auth called!~~', 'name: ~~', username, 'pw: ~~', password,'meth: ~~', method)
     const res = await axios.post(`/auth/${method}`, {username, password})
     console.log('~~auth to axios finished!~~', res)
     window.localStorage.setItem(TOKEN, res.data.token)
+    await setToken(username, key)
     dispatch(me())
     
   } catch (authError) {
@@ -52,10 +62,17 @@ export const logout = () => {
   }
 }
 
+const setToken = async(username, key) => {
+  console.log('The store is attempting to add the key.....', username, key)
+  await axios.put(`/auth/set/${username}`, {key})
+  return(console.log('token was set!!'))
+}
+
 /**
  * REDUCER
  */
 export default function(state = {}, action) {
+  console.log('the action!!!', action)
   switch (action.type) {
     case SET_AUTH:
       return action.auth

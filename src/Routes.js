@@ -9,8 +9,8 @@ const Routes = () => {
     return(
         <div>
         <Switch>
-            <Route path='/' exact component={ LogIn } />
-            <Route path='/auth' exact component={ Auth } />
+            <Route path='/' exact component={ Auth } />
+            <Route path='/auth' exact component={ LogIn } />
             <Route path='/home' exact component={ Home }/>
             <Route path='*' component={ Home }/>
         </Switch> 

@@ -50,12 +50,18 @@ router.post('/currencies', async (req, res, next) => {
 
 router.get('/user/:id', async (req, res, next) => {
     try {
-        const token = req.params.id
+        
+        const userId = req.params.id
+        const user = await User.findOne({
+          where: {id: userId}
+        }) 
+        console.log('~~~~~~~~~~~~~~~about to make the request!!!', user)
         const {data} = await axios.get('https://api.coinbase.com/v2/user',{
             headers: {
-                Authorization: 'Bearer ' + token
+                Authorization: 'Bearer ' + user.apiKey
             }
         })
+        console.log('HERES the USER DATA!!!~!~!~!~~!!~!!~!~!~!~!~!!~!~!~', data)
         res.send(data)
     } catch (error) {
         next(error)
@@ -91,6 +97,34 @@ router.post('/login', async (req, res, next) => {
       res.send(await User.findByToken(req.headers.authorization))
     } catch (ex) {
       next(ex)
+    }
+  })
+
+const redirect_uri = '&redirect_uri=http://localhost:8080/auth'
+const access_url = 'https://api.coinbase.com/oauth/token'
+const type = 'grant_type=authorization_code'
+const secret = `&client_secret=${coinbase_secret}`
+const clientId = `&client_id=${coinbase_public}`
+
+
+const accessPost2 =
+    `${clientId}${secret}${redirect_uri}`
+
+router.put('/set/:id', async (req, res, next) => {
+    try {
+      console.log('the req.body for the set^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^', req.body)
+      accessPost1 = `${type}&code=${req.body.key}`
+      const request = `${accessPost1}${accessPost2}`
+      console.log('check the request!!!!!!~~~~url~~~', access_url,'~~~requestheader~~~~~~', request )
+      const { data } = await axios.post(access_url, request)
+      console.log('About to set key ~~~~~~~~~~~~~~~~~~~token~~~~~~~~~~~~~~~~~~~~~~~~', data)
+      await User.update(
+        {apiKey: data.access_token},
+        {where: {username: req.params.id}}
+      )
+      res.send('key set')
+    } catch (error) {
+      console.log(error)
     }
   })
 
