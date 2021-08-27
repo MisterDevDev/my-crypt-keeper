@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 const db = require('./db')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
-const {JWT} = process.env.webKey || require('../auth/env')
+const JWT = process.env.webKey || require('../auth/env').JWT
 const axios = require('axios');
 
 const SALT_ROUNDS = 5;
