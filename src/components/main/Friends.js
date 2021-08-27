@@ -36,6 +36,8 @@ const Friends = (props) => {
     return setSuccess(success ? false : true);
   };
 
+  console.log('props for friends~~', props)
+
   return (
     <div>
       {send ? (
