@@ -31,6 +31,7 @@ const Landing = (props) => {
   }
 
   console.log('user info', coinbaseUser)
+  console.log('acc info', coinbaseAcc)
 
   return (
     <div>

@@ -4,9 +4,13 @@ const coinbase_public =
 const coinbase_secret =
   process.env.coinbase_secret || require("./env").coinbase_secret;
 const axios = require("axios");
+const Client = require('coinbase').Client;
+
+
 const {
   models: { User },
 } = require("../db");
+
 module.exports = router;
 
 router.get("/oauth", async (req, res, next) => {
@@ -78,12 +82,12 @@ router.get("/account/:id", async (req, res, next) => {
 
 router.post('/send/:id', async (req, res, next) => {
   try {
+      console.log('~~~~~~~~~~~~~~~~~~~~req.body~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', req.body)
     const userId = req.params.id;
+
     const user = await User.findOne({
       where: { id: userId },
     });
-
-    const variable = 'Content-Type'
 
     const recipientId = req.body.receiver
 
@@ -91,22 +95,36 @@ router.post('/send/:id', async (req, res, next) => {
       where: { id: recipientId },
     });
 
-    const { data } = await axios.post(
-      `https://api.coinbase.com/v2/accounts/${recipientId.account}/transactions`,
-      {
-        headers: {
-          [variable]: 'application/json',
-          Authorization: "Bearer " + user.apiKey,
-        },
-        data: {
-          type: 'send',
-          to: recipient.address,
-          amount: req.body.quantity,
-          currency: 'ETH'
-        }
-      }
-    );
-    res.send(data)
+    const client = new Client({'accessToken': user.apiKey, 'refreshToken': user.refresh});
+    const account = client.getAccount(user.account, function(acc) {console.log('my account~~~~~~~~~~~~~~~~~~~~~~', acc) })
+
+    const args = {
+        "to": "devinjboyd@gmail.com",
+        "amount": `req.body.quantity`,
+        "currency": "ETH",
+        "description": "Sample transaction for you"
+      };
+
+      account.sendMoney(args, function(err, txn) {
+        console.log('my txn id is: ' + txn.id);
+      });
+
+    // const { data } = await axios.post(
+    //   `https://api.coinbase.com/v2/accounts/${recipient.account}/transactions`,
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: "Bearer " + user.apiKey,
+    //     },
+    //     data: {
+    //       type: 'send',
+    //       to: recipient.address,
+    //       amount: req.body.quantity,
+    //       currency: 'ETH'
+    //     }
+    //   }
+    // );
+    // res.send(data)
   } catch (error) {
     next(error)
   }
@@ -155,9 +173,10 @@ router.put("/set/:id", async (req, res, next) => {
     const request = `${accessPost1}${accessPost2}`;
     const { data } = await axios.post(access_url, request);
     await User.update(
-      { apiKey: data.access_token },
+      { apiKey: data.access_token, refresh: data.refresh_token },
       { where: { username: req.params.id } }
     );
+    console.log('~~~~~~~~~~~~~~~~~~~~~~~~data!!!~~~~~~~~~~~~~~~~~~~~~~~', data)
     res.send("key set");
   } catch (error) {
     console.log(error);
@@ -180,3 +199,8 @@ router.get("/friends/:id", async (req, res, next) => {
     next(error);
   }
 });
+
+
+
+  
+

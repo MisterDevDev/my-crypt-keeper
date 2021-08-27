@@ -49,8 +49,8 @@ const Auth = (props) => {
     const clientId = `&client_id=${publicKey}`
     const redirect_uri = '&redirect_uri=http://localhost:8080/auth' //'&redirect_uri=https://fast-brook-16275.herokuapp.com/' 
     const secure_code = '&state=4t5e6s7t8'
-    const scope = '&account_currency=BTC,ETH,ADA&account=all&scope=wallet:accounts:read&scope=wallet:transactions:transfer'
-    const limit = '&meta[send_limit_amount]=10&meta[send_limit_currency]=USD&meta[send_limit_period]=day'
+    const scope = '&account_currency=BTC,ETH,ADA&account=all&scope=wallet:transactions:send'
+    const limit = '&meta[send_limit_amount]=1&meta[send_limit_currency]=USD&meta[send_limit_period]=day'
     const coinbaseOauth =
         `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}${limit}`
 

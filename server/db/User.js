@@ -24,6 +24,9 @@ const User = db.define('user', {
   },
   account: {
     type: Sequelize.STRING
+  },
+  refresh: {
+    type: Sequelize.STRING
   }
 })
 
