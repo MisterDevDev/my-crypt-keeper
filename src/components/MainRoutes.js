@@ -8,7 +8,7 @@ const MainRoutes = () => {
     return(
         <div>
         <Switch>
-            <Route path='/friends' component={ Friends } />
+            <Route path='/friends/:id' component={ Friends } />
             <Route path='/currency' component={ Currency } />
             <Route path='/home/:id' component={ Landing } />
         </Switch> 

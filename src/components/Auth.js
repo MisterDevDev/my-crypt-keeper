@@ -1,6 +1,5 @@
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { connect } from "react-redux";
 
 
@@ -28,8 +27,6 @@ const Auth = (props) => {
         console.log('_user is: ~~', _user)
         try {
             if (_key) {
-                console.log('my _key~~', _key)
-                console.log('my accessPost var~~~', accessPost)
                 const { data } = await axios.post(access_url, accessPost)
                 console.log('data from fetching api key', data)
                 await axios.put(`/auth/set/${_user}`, {key:data.access_token})
@@ -39,16 +36,6 @@ const Auth = (props) => {
             console.log(error)
         }
     }
-    console.log('Auths props!!!',props)
-    // const makeCookie = (access, refresh) => {
-    //     const now = new Date();
-    //     let time = now.getTime();
-    //     let withHours = time + 2 * 60 * 60 * 1000
-    //     now.setTime(withHours);
-    //     let expireTime = `expires=${now.toUTCString()}`;
-    //     document.cookie = `cookie=${access}&${refresh};${expireTime}`
-    // }
-
 
 
     let _key = props.location.search
@@ -62,18 +49,10 @@ const Auth = (props) => {
     const clientId = `&client_id=${publicKey}`
     const redirect_uri = '&redirect_uri=http://localhost:8080/auth' //'&redirect_uri=https://fast-brook-16275.herokuapp.com/' 
     const secure_code = '&state=4t5e6s7t8'
-    const scope = '&account_currency=BTC,ETH,ADA&account=all&scope=wallet:accounts:read'
-
+    const scope = '&account_currency=BTC,ETH,ADA&account=all&scope=wallet:accounts:read&scope=wallet:transactions:transfer'
+    const limit = '&meta[send_limit_amount]=10&meta[send_limit_currency]=USD&meta[send_limit_period]=day'
     const coinbaseOauth =
-        `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}`
-
-    //After accessToken aquired
-    const access_url = 'https://api.coinbase.com/oauth/token'
-    const type = 'grant_type=authorization_code'
-    const code = `&code=${_key}`
-
-    const accessPost =
-        `${type}${code}${clientId}${redirect_uri}`
+        `${coinbase_url}${response}${clientId}${redirect_uri}${secure_code}${scope}${limit}`
 
     return (
         <div className='authPage'>

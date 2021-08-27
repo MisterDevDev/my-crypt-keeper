@@ -18,6 +18,12 @@ const User = db.define('user', {
   },
   apiKey: {
     type: Sequelize.STRING
+  },
+  address: {
+    type: Sequelize.STRING
+  },
+  account: {
+    type: Sequelize.STRING
   }
 })
 

@@ -20,7 +20,6 @@ const SignIn = (props) => {
     const username = evt.target.username.value;
     const password = evt.target.password.value;
     await axios.put(`/auth/set/${username}`, {key})
-    console.log('~~~~~~~~~~~~~stuff that happened after setToken~~~~~~~~~~~~~')
     handleLogin(formName, username, password, key)
   }
 

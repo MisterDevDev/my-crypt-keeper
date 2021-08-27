@@ -24,7 +24,6 @@ const grantAccess = (key) => {
 router.put('/set/:id', async (req, res, next) => {
     try {
       const token = grantAccess(req.body._key)
-      console.log('About to set key ~~~~~~~~~~~~~~~~~~~token~~~~~~~~~~~~~~~~~~~~~~~~', token)
       await User.update(
         {apiKey: req.token},
         {where: {username: req.params.id}}

@@ -26,7 +26,6 @@ const setAuth = auth => ({type: SET_AUTH, auth})
  * THUNK CREATORS
  */
 export const me = () => async dispatch => {
-  console.log('~~me called!~~')
   const token = window.localStorage.getItem(TOKEN)
   if (token) {
     const res = await axios.get('/auth/me', {
@@ -34,16 +33,13 @@ export const me = () => async dispatch => {
         authorization: token
       }
     })
-    console.log('~~me finished!~~', res)
     return dispatch(setAuth(res.data))
   }
 }
 
 export const authenticate = (username, password, method, key) => async dispatch => {
   try {
-    console.log('~~auth called!~~', 'name: ~~', username, 'pw: ~~', password,'meth: ~~', method)
     const res = await axios.post(`/auth/${method}`, {username, password})
-    console.log('~~auth to axios finished!~~', res)
     window.localStorage.setItem(TOKEN, res.data.token)
     //await setToken(username, key)
     dispatch(me())
@@ -62,17 +58,11 @@ export const logout = () => {
   }
 }
 
-const setToken = async(username, key) => {
-  console.log('The store is attempting to add the key.....', username, key)
-  
-  return(console.log('token was set!!'))
-}
 
 /**
  * REDUCER
  */
 export default function(state = {}, action) {
-  console.log('the action!!!', action)
   switch (action.type) {
     case SET_AUTH:
       return action.auth

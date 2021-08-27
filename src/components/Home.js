@@ -7,8 +7,6 @@ import Footer from "./Footer";
 import { connect } from "react-redux";
 
 const Home = (props) => {
-
-  console.log(props)
   return (
     <div className="blushDiv">
       <Navbar />

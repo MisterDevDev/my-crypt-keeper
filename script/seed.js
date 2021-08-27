@@ -9,13 +9,29 @@ async function seed() {
   console.log('db synced!')
 
   // Creating Users
-  const users = await Promise.all([
-    User.create({ username: 'cody', password: '123' }),
-    User.create({ username: 'murphy', password: '123', userId:1 }),
-    User.create({ username: 'lumpy', password: '123', userId:1 }),
-    User.create({ username: 'tick', password: '123', userId:1 }),
-    User.create({ username: 'wart', password: '123', userId:1 }),
+  const [cody, murphy, lumpy, tick, wart] = await Promise.all([
+    User.create({ username: 'cody', password: '123',
+    account: 'd66fddb5-8102-5e5d-8248-aba8b68d681f', address: '0xD446CB3b3A0A632eDb0f3d331Ef6a189b0E9eE3A'}),
+    User.create({ username: 'murphy', password: '123'}),
+    User.create({ username: 'lumpy', password: '123',
+    account:'24a9e0d8-460a-5430-b9d5-091ff13a5b28', address:'0x988f0cE276fCF8E7eBD2E5C4071813B5c0Dbb4f0'}),
+    User.create({ username: 'tick', password: '123'}),
+    User.create({ username: 'wart', password: '123'}),
   ])
+
+  murphy.userId = cody.id
+  lumpy.userId = cody.id
+  tick.userId = cody.id
+  wart.userId = cody.id
+
+  await Promise.all([
+    murphy.save(),
+    lumpy.save(),
+    tick.save(),
+    wart.save()
+  ])
+
+  users = [cody, murphy, lumpy, tick, wart]
 
   console.log(`seeded ${users.length} users`)
   console.log(`seeded successfully`)
