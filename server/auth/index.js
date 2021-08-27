@@ -153,6 +153,7 @@ router.post("/signup", async (req, res, next) => {
 
 router.get("/me", async (req, res, next) => {
   try {
+    console.log('~~~~~~req.headers.authorization from me~~~~~~~~~~~~~~~~~~~~~~~~~', req.headers.authorization)
     res.send(await User.findByToken(req.headers.authorization));
   } catch (ex) {
     next(ex);
