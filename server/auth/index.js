@@ -159,7 +159,7 @@ router.get("/me", async (req, res, next) => {
   }
 });
 
-const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/' //"&redirect_uri=http://localhost:8080/auth";
+const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/auth' //"&redirect_uri=http://localhost:8080/auth";
 const access_url = "https://api.coinbase.com/oauth/token";
 const type = "grant_type=authorization_code";
 const secret = `&client_secret=${coinbase_secret}`;
