@@ -5,11 +5,19 @@ const coinbase_secret =
   process.env.coinbase_secret || require("./env").coinbase_secret;
 const axios = require("axios");
  
-const my_key  = process.env.my_key || require("./env")
-const my_secret = process.env.my_secret || require("./env")
+const my_key  = process.env.my_key || require("./env").my_key
+const my_secret = process.env.my_secret || require("./env").my_secret
 var Client = require('coinbase').Client;
 
+
 var client = new Client({'apiKey': my_key, 'apiSecret': my_secret});
+
+client.getAccounts({}, function(err, accounts) {
+  if(err)console.log('error is~~~~~~', err)
+  accounts.forEach(function(acct) {
+    console.log('my bal: ' + acct.balance.amount + ' for ' + acct.name);
+  });
+});
 
 const Account = require('coinbase').model.Account;
 
@@ -195,7 +203,7 @@ router.get("/me", async (req, res, next) => {
   }
 });
 
-const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/auth' // "&redirect_uri=http://localhost:8080/auth"; // 
+const redirect_uri = "&redirect_uri=http://localhost:8080/auth"; // '&redirect_uri=https://fast-brook-16275.herokuapp.com/auth' // 
 const access_url = "https://api.coinbase.com/oauth/token";
 const type = "grant_type=authorization_code";
 const secret = `&client_secret=${coinbase_secret}`;
