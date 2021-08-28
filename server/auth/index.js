@@ -4,7 +4,10 @@ const coinbase_public =
 const coinbase_secret =
   process.env.coinbase_secret || require("./env").coinbase_secret;
 const axios = require("axios");
-const Client = require('coinbase').Client;
+
+var coinbase = require('coinbase');
+var client   = new coinbase.Client({'apiKey': coinbase_public, 'apiSecret': coinbase_secret});
+ 
 
 
 const {
@@ -95,19 +98,15 @@ router.post('/send/:id', async (req, res, next) => {
       where: { id: recipientId },
     });
 
-    const client = new Client({'accessToken': user.apiKey, 'refreshToken': user.refresh});
-    const account = client.getAccount(user.account, function(acc) {console.log('my account~~~~~~~~~~~~~~~~~~~~~~', acc) })
-
-    const args = {
-        "to": "devinjboyd@gmail.com",
-        "amount": `req.body.quantity`,
-        "currency": "ETH",
-        "description": "Sample transaction for you"
-      };
-
-      account.sendMoney(args, function(err, txn) {
-        console.log('my txn id is: ' + txn.id);
+    client.getAccount(`${user.account}`, function(err, account) {
+        if(err) console.log(err)
+        console.log('bal: ' + account.balance.amount + ' currency: ' + account.balance.currency);
       });
+
+    res.send(200)
+    //   myAccount.sendMoney(args, function(err, txn) {
+    //     console.log('my txn id is: ', txn.id ? txn.id: err);
+    //   });
 
     // const { data } = await axios.post(
     //   `https://api.coinbase.com/v2/accounts/${recipient.account}/transactions`,
@@ -160,7 +159,7 @@ router.get("/me", async (req, res, next) => {
   }
 });
 
-const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/auth' //"&redirect_uri=http://localhost:8080/auth";
+const redirect_uri = "&redirect_uri=http://localhost:8080/auth"; //'&redirect_uri=https://fast-brook-16275.herokuapp.com/auth' //
 const access_url = "https://api.coinbase.com/oauth/token";
 const type = "grant_type=authorization_code";
 const secret = `&client_secret=${coinbase_secret}`;
