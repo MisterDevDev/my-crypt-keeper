@@ -4,22 +4,24 @@ const coinbase_public =
 const coinbase_secret =
   process.env.coinbase_secret || require("./env").coinbase_secret;
 const axios = require("axios");
+
+const test_token = require("./env")
  
 const my_key  = process.env.my_key || require("./env").my_key
 const my_secret = process.env.my_secret || require("./env").my_secret
-var Client = require('coinbase').Client;
+// var Client = require('coinbase').Client;
 
 
-var client = new Client({'apiKey': my_key, 'apiSecret': my_secret});
+// var client = new Client({'apiKey': my_key, 'apiSecret': my_secret});
 
-client.getAccounts({}, function(err, accounts) {
-  if(err)console.log('error is~~~~~~', err)
-  accounts.forEach(function(acct) {
-    console.log('my bal: ' + acct.balance.amount + ' for ' + acct.name);
-  });
-});
+// client.getAccounts({}, function(err, accounts) {
+//   if(err)console.log('error is~~~~~~', err)
+//   accounts.forEach(function(acct) {
+//     console.log('my bal: ' + acct.balance.amount + ' for ' + acct.name);
+//   });
+// });
 
-const Account = require('coinbase').model.Account;
+// const Account = require('coinbase').model.Account;
 
 
 // client.getAccounts({}, function(err, accounts) {
@@ -74,7 +76,7 @@ router.get("/user/:id", async (req, res, next) => {
     });
     const { data } = await axios.get("https://api.coinbase.com/v2/user", {
       headers: {
-        Authorization: "Bearer " + user.apiKey,
+        'Authorization': "Bearer " + user.apiKey,
       },
     });
     res.send(data);
@@ -103,71 +105,57 @@ router.get("/account/:id", async (req, res, next) => {
   }
 });
 
-router.post('/send/:id', async (req, res, next) => {
+router.get('/send/', async (req, res, next) => {
   try {
       console.log('~~~~~~~~~~~~~~~~~~~~req.body~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', req.body)
       console.log('da keys~~~', my_key,'~~~~~~~~~~~~~~~~~~~~~', my_secret)
-    const userId = req.params.id;
+    // const userId = req.params.id;
 
-    const user = await User.findOne({
-      where: { id: userId },
-    });
-
-    const recipientId = req.body.receiver
-
-    const recipient = await User.findOne({
-      where: { id: recipientId },
-    });
-
-      var args = {
-      "to": "djb91c@gmail.com",
-      "amount": req.body.quantity,
-      "currency": "ETH",
-      "description": "Sample transaction for you"
-    };
-
-    const myAccount = new Account(client, {'id': `${user.account}`});
-
-    myAccount.sendMoney(args, function(err, txn){
-      if(err) console.log('my error!!!!!!!!!!!!!', err)
-      console.log('my txn thingy.......... =>   ', txn)
-    })
-
- 
-
-    // client.getAccounts({}, function(err, accounts) {
-    //   if(err) console.log('this is the err.......!!!!@!@!~@~!@~@!!~@!~ ', err)
-    //   accounts.forEach(function(acct) {
-    //     console.log('my bal: ' + acct.balance.amount + ' for ' + acct.name);
-    //   });
+    // const user = await User.findOne({
+    //   where: { id: userId },
     // });
 
+    // const recipientId = req.body.receiver
 
-    // client.getAccount(`${user.account}`, function(err, account) {
-    //   if(err) console.log('my error', err)
-    //   console.log('bal: ' + account.balance.amount + ' currency: ' + account.balance.currency);
-    //   account.sendMoney(args, function(err, txn) {
-    //     if(err) console.log('My error~~', err)
-    //     console.log('my txn id is: ' + txn.id);
-    //   });
+    // const recipient = await User.findOne({
+    //   where: { id: recipientId },
     // });
 
     // const { data } = await axios.post(
     //   `https://api.coinbase.com/v2/accounts/${user.account}/transactions`,
     //   {
     //     headers: {
-    //       'Content-Type': 'application/json',
+    //       ContentType: 'application/json',
     //       Authorization: "Bearer " + user.apiKey,
     //     },
     //     data: {
     //       type: 'send',
-    //       to: 'djb91c@gmail.com',
+    //       to: 'devinjboyd@gmail.com',
     //       amount: req.body.quantity,
-    //       currency: 'BTC'
+    //       currency: 'ETC'
     //     }
     //   }
     // );
-    // res.send(200)
+    var options = {
+      method: 'GET',
+      url: 'https://crypto-arbitrage.p.rapidapi.com/crypto-arb',
+      params: {
+        pair: 'BTC/USD',
+        consider_fees: 'False',
+        selected_exchanges: 'exmo cex bitstamp hitbtc'
+      },
+      headers: {
+        'x-rapidapi-host': 'crypto-arbitrage.p.rapidapi.com',
+        'x-rapidapi-key': '7ee607c6d0msh2dadd266c3e42b3p1d295fjsn7b82a2a81568'
+      }
+    };
+    
+    axios.request(options).then(function (response) {
+      res.send(response.data);
+    }).catch(function (error) {
+      console.error(error);
+    });
+
   } catch (error) {
     next(error)
   }

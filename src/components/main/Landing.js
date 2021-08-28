@@ -4,6 +4,7 @@ import axios from "axios";
 const Landing = (props) => {
   const [coinbaseUser, setCoinbaseUser] = useState(() => []);
   const [coinbaseAcc, setCoinbaseAcc] = useState(() => []);
+  const [toCompare, setToCompare] = useState(() => []); 
 
   useEffect(() => {
     fetchCoinbaseUser();
@@ -30,11 +31,41 @@ const Landing = (props) => {
     }
   }
 
+  function handleCard(currency) {
+    setToCompare([...toCompare, currency])
+  }
+
+  async function handleCompare(){
+    if(toCompare.length === 2){
+    const {data} = await axios.get('/auth/send')
+    console.log('compare', data)
+    }
+  }
+
   console.log('user info', coinbaseUser)
   console.log('acc info', coinbaseAcc)
 
   return (
     <div>
+      {toCompare[0] ? <div class="box">
+                  <h4 id="const" class="title is-3">
+                    {toCompare.length === 2 ? '':'Select another currency'}
+                  </h4>
+                  <article class="message is-light">
+                    <span class="icon has-text-light">
+                      <i class="fab fa-js"></i>
+                    </span>
+                    <div class="message-body">
+                      {toCompare.length === 2 ? `Compare exchange rates for ${toCompare[0]} & ${toCompare[1]}`
+                      : `Compare exchange rates for ${toCompare[0]} &` }
+                    </div>
+                  </article>
+                  <div class="buttons">
+                    <button onClick={() => handleCompare()} 
+                    class={toCompare.length === 2 ? "button is-primary" :"button is-light"}>
+                      {toCompare.length === 2 ? 'Click to Compare!' : 'Select Another Currency'}</button>
+                  </div>
+                </div>:''}
       {coinbaseAcc.data
         ? coinbaseAcc.data
             .filter((wallet) => wallet.balance.amount > 0)
@@ -53,8 +84,8 @@ const Landing = (props) => {
                     </div>
                   </article>
                   <div class="buttons">
-                    <button class="button is-warning">{`Buy ${wallet.currency.code}`}</button>
-                    <button class="button is-warning">{`Send ${wallet.currency.code}`}</button>
+                    <button onClick={() => handleCard(wallet.currency.code)} class="button is-warning">{`Select ${wallet.currency.code}`}</button>
+                    <button class="button is-warning">{`Exchange ${wallet.currency.code}`}</button>
                   </div>
                 </div>
               );
