@@ -5,6 +5,21 @@ const coinbase_secret =
   process.env.coinbase_secret || require("./env").coinbase_secret;
 const axios = require("axios");
  
+const my_key  = process.env.my_key || require("./env")
+const my_secret = process.env.my_secret || require("./env")
+var Client = require('coinbase').Client;
+
+var client = new Client({'apiKey': my_key, 'apiSecret': my_secret});
+
+const Account = require('coinbase').model.Account;
+
+
+// client.getAccounts({}, function(err, accounts) {
+//   if(err) console.log('the error is.....', err)
+//   accounts.forEach(function(acct) {
+//     console.log('my bal: ' + acct.balance.amount + ' for ' + acct.name);
+//   });
+// });
 
 
 const {
@@ -83,7 +98,7 @@ router.get("/account/:id", async (req, res, next) => {
 router.post('/send/:id', async (req, res, next) => {
   try {
       console.log('~~~~~~~~~~~~~~~~~~~~req.body~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~', req.body)
-    
+      console.log('da keys~~~', my_key,'~~~~~~~~~~~~~~~~~~~~~', my_secret)
     const userId = req.params.id;
 
     const user = await User.findOne({
@@ -96,38 +111,41 @@ router.post('/send/:id', async (req, res, next) => {
       where: { id: recipientId },
     });
 
-    var args = {
-      "to": "0x988f0cE276fCF8E7eBD2E5C4071813B5c0Dbb4f0",
+      var args = {
+      "to": "djb91c@gmail.com",
       "amount": req.body.quantity,
       "currency": "ETH",
       "description": "Sample transaction for you"
     };
 
-    var Client = require('coinbase').Client;
+    const myAccount = new Account(client, {'id': `${user.account}`});
 
-    var client = new Client({'accessToken': user.apiKey, 'refreshToken': user.refresh});
+    myAccount.sendMoney(args, function(err, txn){
+      if(err) console.log('my error!!!!!!!!!!!!!', err)
+      console.log('my txn thingy.......... =>   ', txn)
+    })
 
-    client.getAccount(`${user.account}`, function(err, account) {
-      if(err) console.log('my error', err)
-      console.log('bal: ' + account.balance.amount + ' currency: ' + account.balance.currency);
-      account.sendMoney(args, function(err, txn) {
-        if(err) console.log('My error~~', err)
-        console.log('my txn id is: ' + txn.id);
-      });
-    });
+ 
 
-    // account.sendMoney(args, function(err, txn) {
-    //   if(err) console.log('My error~~', err)
-    //   console.log('my txn id is: ' + txn.id);
+    // client.getAccounts({}, function(err, accounts) {
+    //   if(err) console.log('this is the err.......!!!!@!@!~@~!@~@!!~@!~ ', err)
+    //   accounts.forEach(function(acct) {
+    //     console.log('my bal: ' + acct.balance.amount + ' for ' + acct.name);
+    //   });
     // });
 
-    res.send(200)
-    //   myAccount.sendMoney(args, function(err, txn) {
-    //     console.log('my txn id is: ', txn.id ? txn.id: err);
+
+    // client.getAccount(`${user.account}`, function(err, account) {
+    //   if(err) console.log('my error', err)
+    //   console.log('bal: ' + account.balance.amount + ' currency: ' + account.balance.currency);
+    //   account.sendMoney(args, function(err, txn) {
+    //     if(err) console.log('My error~~', err)
+    //     console.log('my txn id is: ' + txn.id);
     //   });
+    // });
 
     // const { data } = await axios.post(
-    //   `https://api.coinbase.com/v2/accounts/${recipient.account}/transactions`,
+    //   `https://api.coinbase.com/v2/accounts/${user.account}/transactions`,
     //   {
     //     headers: {
     //       'Content-Type': 'application/json',
@@ -135,13 +153,13 @@ router.post('/send/:id', async (req, res, next) => {
     //     },
     //     data: {
     //       type: 'send',
-    //       to: recipient.address,
+    //       to: 'djb91c@gmail.com',
     //       amount: req.body.quantity,
-    //       currency: 'ETH'
+    //       currency: 'BTC'
     //     }
     //   }
     // );
-    // res.send(data)
+    // res.send(200)
   } catch (error) {
     next(error)
   }
@@ -177,7 +195,7 @@ router.get("/me", async (req, res, next) => {
   }
 });
 
-const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/auth' // "&redirect_uri=http://localhost:8080/auth"; //
+const redirect_uri = '&redirect_uri=https://fast-brook-16275.herokuapp.com/auth' // "&redirect_uri=http://localhost:8080/auth"; // 
 const access_url = "https://api.coinbase.com/oauth/token";
 const type = "grant_type=authorization_code";
 const secret = `&client_secret=${coinbase_secret}`;
